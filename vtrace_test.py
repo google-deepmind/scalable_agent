@@ -87,7 +87,7 @@ class LogProbsFromLogitsAndActionsTest(tf.test.TestCase,
                                        parameterized.TestCase):
 
   @parameterized.named_parameters(('Batch1', 1), ('Batch2', 2))
-  def testLogProbsFromLogitsAndActions(self, batch_size):
+  def test_log_probs_from_logits_and_actions(self, batch_size):
     """Tests log_probs_from_logits_and_actions."""
     seq_len = 7
     num_actions = 3
@@ -118,7 +118,7 @@ class LogProbsFromLogitsAndActionsTest(tf.test.TestCase,
 class VtraceTest(tf.test.TestCase, parameterized.TestCase):
 
   @parameterized.named_parameters(('Batch1', 1), ('Batch5', 5))
-  def testVTrace(self, batch_size):
+  def test_vtrace(self, batch_size):
     """Tests V-trace against ground truth data calculated in python."""
     seq_len = 5
 
@@ -156,7 +156,7 @@ class VtraceTest(tf.test.TestCase, parameterized.TestCase):
       self.assertAllClose(a, b)
 
   @parameterized.named_parameters(('Batch1', 1), ('Batch2', 2))
-  def testVTraceFromLogits(self, batch_size):
+  def test_vtrace_from_logits(self, batch_size):
     """Tests V-trace calculated from logits."""
     seq_len = 5
     num_actions = 3
@@ -246,7 +246,7 @@ class VtraceTest(tf.test.TestCase, parameterized.TestCase):
                         from_logits_output_v.target_action_log_probs)
     self.assertAllClose(ground_truth_log_rhos, from_logits_output_v.log_rhos)
 
-  def testHigherRankInputsForIW(self):
+  def test_higher_rank_inputs_for_importance_weights(self):
     """Checks support for additional dimensions in inputs."""
     placeholders = {
         'log_rhos': tf.placeholder(dtype=tf.float32, shape=[None, None, 1]),
@@ -258,7 +258,7 @@ class VtraceTest(tf.test.TestCase, parameterized.TestCase):
     output = vtrace.from_importance_weights(**placeholders)
     self.assertEqual(output.vs.shape.as_list()[-1], 42)
 
-  def testInconsistentRankInputsForIW(self):
+  def test_inconsistent_rank_inputs_for_importance_weights(self):
     """Test one of many possible errors in shape of inputs."""
     placeholders = {
         'log_rhos': tf.placeholder(dtype=tf.float32, shape=[None, None, 1]),
