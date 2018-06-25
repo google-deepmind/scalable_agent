@@ -412,7 +412,7 @@ def build_learner(agent, agent_state, env_outputs, agent_outputs):
 
 def create_environment(level_name, seed, is_test=False):
   """Creates an environment wrapped in a `FlowEnvironment`."""
-  if level_name in dmlab30.LEVEL_MAPPING.keys():
+  if level_name in dmlab30.ALL_LEVELS:
     level_name = 'contributed/dmlab30/' + level_name
 
   # Note, you may want to use a level cache to speed of compilation of

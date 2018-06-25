@@ -66,8 +66,9 @@ python experiment.py --job_name=learner --task=0 --num_actors=150 \
 ```sh
 for i in $(seq 0 149); do
   python experiment.py --job_name=actor --task=$i \
-      --num_actors=48 --level_name=dmlab30 --dataset_path=[...];
-done
+      --num_actors=48 --level_name=dmlab30 --dataset_path=[...] &
+done;
+wait
 ```
 
 #### Test Score
