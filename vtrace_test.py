@@ -71,7 +71,7 @@ def _ground_truth_calculation(discounts, log_rhos, rewards, values,
     v_s = np.copy(values[s])  # Very important copy.
     for t in range(s, seq_len):
       v_s += (
-          np.prod(discounts[s:t], axis=0) * np.prod(cs[s:t - 1],
+          np.prod(discounts[s:t], axis=0) * np.prod(cs[s:t],
                                                     axis=0) * clipped_rhos[t] *
           (rewards[t] + discounts[t] * values_t_plus_1[t + 1] - values[t]))
     vs.append(v_s)
@@ -122,13 +122,13 @@ class VtraceTest(tf.test.TestCase, parameterized.TestCase):
     """Tests V-trace against ground truth data calculated in python."""
     seq_len = 5
 
+    # Create log_rhos such that rho will span from near-zero to above the
+    # clipping thresholds. In particular, calculate log_rhos in [-2.5, 2.5),
+    # so that rho is in approx [0.08, 12.2).
+    log_rhos = _shaped_arange(seq_len, batch_size) / (batch_size * seq_len)
+    log_rhos = 5 * (log_rhos - 0.5)  # [0.0, 1.0) -> [-2.5, 2.5).
     values = {
-        # Note that this is only for testing purposes using well-formed inputs.
-        # In practice we'd be more careful about taking log() of arbitrary
-        # quantities.
-        'log_rhos':
-            np.log((_shaped_arange(seq_len, batch_size)) / batch_size /
-                   seq_len + 1),
+        'log_rhos': log_rhos,
         # T, B where B_i: [0.9 / (i+1)] * T
         'discounts':
             np.array([[0.9 / (b + 1)

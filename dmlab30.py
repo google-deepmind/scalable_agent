@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Utilities for DmLab-30."""
+"""Utilities for DMLab-30."""
 
 from __future__ import absolute_import
 from __future__ import division
