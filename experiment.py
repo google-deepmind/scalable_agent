@@ -422,7 +422,6 @@ def create_environment(level_name, seed, is_test=False):
       'width': FLAGS.width,
       'height': FLAGS.height,
       'datasetPath': FLAGS.dataset_path,
-      'loggingLevel': 'WARN',
   }
   if is_test:
     config['allowHoldOutLevels'] = 'true'
