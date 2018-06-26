@@ -45,7 +45,7 @@ RUN NP_INC="$(python -c 'import numpy as np; print(np.get_include())[5:]')" && \
     cd lab && \
     sed -i 's@hdrs = glob(\[@hdrs = glob(["'"$NP_INC"'/\*\*/*.h", @g' python.BUILD && \
     sed -i 's@includes = \[@includes = ["'"$NP_INC"'", @g' python.BUILD && \
-    bazel build python/pip_package:build_pip_package && \
+    bazel build -c opt python/pip_package:build_pip_package && \
     pip install wheel && \
     ./bazel-bin/python/pip_package/build_pip_package /tmp/dmlab_pkg && \
     pip install /tmp/dmlab_pkg/DeepMind_Lab-1.0-py2-none-any.whl --force-reinstall
