@@ -37,6 +37,11 @@ try:
 except tf.errors.NotFoundError:
   tf.logging.warning('Running without dynamic batching.')
 
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
+
 
 nest = tf.contrib.framework.nest
 
@@ -138,7 +143,8 @@ class Agent(snt.RNNCore):
     # Return last output.
     return tf.reverse_sequence(output, length, seq_axis=1)[:, 0]
 
-  def _torso(self, (last_action, env_output)):
+  def _torso(self, last_action__env_output):
+    last_action, env_output = last_action__env_output
     reward, _, _, (frame, instruction) = env_output
 
     # Convert to floats.
@@ -194,7 +200,8 @@ class Agent(snt.RNNCore):
 
     return AgentOutput(new_action, policy_logits, baseline)
 
-  def _build(self, (action, env_output), core_state):
+  def _build(self, action__env_output, core_state):
+    (action, env_output) = action__env_output
     actions, env_outputs = nest.map_structure(lambda t: tf.expand_dims(t, 0),
                                               (action, env_output))
     outputs, core_state = self.unroll(actions, env_outputs, core_state)
@@ -246,8 +253,10 @@ def build_actor(agent, env, level_name, action_set):
       create_state, (initial_env_state, initial_env_output, initial_agent_state,
                      initial_agent_output))
 
-  def step((env_state, env_output, agent_state, agent_output), unused_i):
+  def step(env_state__env_output__agent_state__agent_output, unused_i):
     """Steps through the agent and the environment."""
+    (env_state, env_output, agent_state,
+     agent_output) = env_state__env_output__agent_state__agent_output
 
     # Run agent.
     action = agent_output[0]

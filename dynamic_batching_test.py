@@ -26,6 +26,11 @@ import dynamic_batching
 
 import tensorflow as tf
 
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
+
 
 _SLEEP_TIME = 1.0
 

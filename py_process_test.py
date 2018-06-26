@@ -25,6 +25,11 @@ import numpy as np
 import py_process
 import tensorflow as tf
 
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
+
 
 class PyProcessTest(tf.test.TestCase):
 
