@@ -37,10 +37,7 @@ try:
 except tf.errors.NotFoundError:
   tf.logging.warning('Running without dynamic batching.')
 
-try:
-    xrange          # Python 2
-except NameError:
-    xrange = range  # Python 3
+from six.moves import range
 
 
 nest = tf.contrib.framework.nest
@@ -253,10 +250,9 @@ def build_actor(agent, env, level_name, action_set):
       create_state, (initial_env_state, initial_env_output, initial_agent_state,
                      initial_agent_output))
 
-  def step(env_state__env_output__agent_state__agent_output, unused_i):
+  def step(input_, unused_i):
     """Steps through the agent and the environment."""
-    (env_state, env_output, agent_state,
-     agent_output) = env_state__env_output__agent_state__agent_output
+    (env_state, env_output, agent_state, agent_output) = input_
 
     # Run agent.
     action = agent_output[0]
@@ -522,7 +518,7 @@ def train(action_set, level_names):
 
     # Build actors and ops to enqueue their output.
     enqueue_ops = []
-    for i in xrange(FLAGS.num_actors):
+    for i in range(FLAGS.num_actors):
       if is_actor_fn(i):
         level_name = level_names[i % len(level_names)]
         tf.logging.info('Creating actor %d with level %s', i, level_name)

@@ -26,10 +26,7 @@ import dynamic_batching
 
 import tensorflow as tf
 
-try:
-    xrange          # Python 2
-except NameError:
-    xrange = range  # Python 3
+from six.moves import range
 
 
 _SLEEP_TIME = 1.0
@@ -87,7 +84,7 @@ class DynamicBatchingTest(tf.test.TestCase):
         return a + b
 
       outputs = []
-      for i in xrange(200):
+      for i in range(200):
         outputs.append(f(tf.fill([1, 5], i), tf.fill([1, 5], i)))
 
       tf.train.start_queue_runners()
@@ -412,7 +409,7 @@ class DynamicBatchingBenchmarks(tf.test.Benchmark):
         return a + b
 
       outputs = []
-      for _ in xrange(1000):
+      for _ in range(1000):
         outputs.append(f(tf.ones([1, 10]), tf.ones([1, 10])))
       op_to_benchmark = tf.group(*outputs)
 
@@ -432,7 +429,7 @@ class DynamicBatchingBenchmarks(tf.test.Benchmark):
         return a + b
 
       outputs = []
-      for _ in xrange(1000):
+      for _ in range(1000):
         outputs.append(f(tf.ones([1, 100000]), tf.ones([1, 100000])))
       op_to_benchmark = tf.group(*outputs)
 
