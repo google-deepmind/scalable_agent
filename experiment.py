@@ -140,8 +140,8 @@ class Agent(snt.RNNCore):
     # Return last output.
     return tf.reverse_sequence(output, length, seq_axis=1)[:, 0]
 
-  def _torso(self, last_action__env_output):
-    last_action, env_output = last_action__env_output
+  def _torso(self, input_):
+    last_action, env_output = input_
     reward, _, _, (frame, instruction) = env_output
 
     # Convert to floats.
@@ -197,8 +197,8 @@ class Agent(snt.RNNCore):
 
     return AgentOutput(new_action, policy_logits, baseline)
 
-  def _build(self, action__env_output, core_state):
-    (action, env_output) = action__env_output
+  def _build(self, input_, core_state):
+    action, env_output = input_
     actions, env_outputs = nest.map_structure(lambda t: tf.expand_dims(t, 0),
                                               (action, env_output))
     outputs, core_state = self.unroll(actions, env_outputs, core_state)
