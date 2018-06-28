@@ -25,6 +25,8 @@ import numpy as np
 import py_process
 import tensorflow as tf
 
+from six.moves import range
+
 
 class PyProcessTest(tf.test.TestCase):
 
@@ -252,7 +254,7 @@ class PyProcessBenchmarks(tf.test.Benchmark):
   def benchmark_many(self):
     with tf.Graph().as_default():
       ps = [
-          py_process.PyProcess(PyProcessBenchmarks.Example) for _ in xrange(200)
+          py_process.PyProcess(PyProcessBenchmarks.Example) for _ in range(200)
       ]
       compute_ops = [p.proxy.compute(2) for p in ps]
       compute = tf.group(*compute_ops)
