@@ -252,7 +252,7 @@ def build_actor(agent, env, level_name, action_set):
 
   def step(input_, unused_i):
     """Steps through the agent and the environment."""
-    (env_state, env_output, agent_state, agent_output) = input_
+    env_state, env_output, agent_state, agent_output = input_
 
     # Run agent.
     action = agent_output[0]
@@ -549,7 +549,7 @@ def train(action_set, level_names):
 
       def make_time_major(s):
         return nest.map_structure(
-            lambda t: tf.transpose(t, [1, 0] + range(t.shape.ndims)[2:]), s)
+            lambda t: tf.transpose(t, [1, 0] + list(range(t.shape.ndims))[2:]), s)
 
       dequeued = dequeued._replace(
           env_outputs=make_time_major(dequeued.env_outputs),
