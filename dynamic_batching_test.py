@@ -217,8 +217,9 @@ class DynamicBatchingTest(tf.test.TestCase):
         time.sleep(_SLEEP_TIME)
 
       # Session closed.
-      coord.request_stop()
-      coord.join()
+      with self.assertRaisesRegexp(tf.errors.CancelledError,
+                                   'GetInputs operation was cancelled'):
+        coord.join()
 
   def test_batcher_closed(self):
     with tf.Graph().as_default():
