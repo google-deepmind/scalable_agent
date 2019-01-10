@@ -4,6 +4,7 @@ FROM ubuntu:18.04
 # g++ (v. 5.4) does not work: https://github.com/tensorflow/tensorflow/issues/13308
 RUN apt-get update && apt-get install -y \
     curl \
+    wget \
     zip \
     unzip \
     software-properties-common \
@@ -28,14 +29,29 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev
 
 # Install bazel
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | \
-    tee /etc/apt/sources.list.d/bazel.list && \
-    curl https://bazel.build/bazel-release.pub.gpg | \
-    apt-key add - && \
-    apt-get update && apt-get install -y bazel
+    # The Following Breaks for bazel 0.17.1
+    #
+    # RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | \
+    # tee /etc/apt/sources.list.d/bazel.list && \
+    # curl https://bazel.build/bazel-release.pub.gpg | \
+    # apt-key add - && \
+    # apt-get update && apt-get install -y bazel
+    #
+    #
+RUN export BAZEL_VERSION=0.16.1 && \
+    wget https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
+    sed -i 's@sudo@, @g' bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
+    chmod +x bazel-$BAZEL_VERSION-installer-linux-x86_64.sh &&\
+    ./bazel-$BAZEL_VERSION-installer-linux-x86_64.sh --user
+
+ENV PATH="/root/bin:${PATH}"
 
 # Install TensorFlow and other dependencies
-RUN pip install tensorflow==1.9.0 dm-sonnet
+# .................................
+# sonnet's last version isn't stable yet 
+# see https://github.com/deepmind/scalable_agent/issues/28
+# see https://github.com/deepmind/graph_nets/issues/2
+RUN pip install tensorflow==1.9.0 tensorflow_probability dm-sonnet==1.23
 
 # Build and install DeepMind Lab pip package.
 # We explicitly set the Numpy path as shown here:
