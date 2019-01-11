@@ -35,7 +35,7 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
     apt-get update && apt-get install -y bazel
 
 # Install TensorFlow and other dependencies
-RUN pip install tensorflow==1.9.0 dm-sonnet
+RUN pip install tensorflow==1.9.0 dm-sonnet==1.23
 
 # Build and install DeepMind Lab pip package.
 # We explicitly set the Numpy path as shown here:
