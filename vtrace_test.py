@@ -94,7 +94,7 @@ class LogProbsFromLogitsAndActionsTest(tf.test.TestCase,
 
     policy_logits = _shaped_arange(seq_len, batch_size, num_actions) + 10
     actions = np.random.randint(
-        0, num_actions - 1, size=(seq_len, batch_size), dtype=np.int32)
+        0, num_actions, size=(seq_len, batch_size), dtype=np.int32)
 
     action_log_probs_tensor = vtrace.log_probs_from_logits_and_actions(
         policy_logits, actions)
